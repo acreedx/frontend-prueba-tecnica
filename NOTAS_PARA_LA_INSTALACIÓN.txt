@@ -1,3 +1,8 @@
+"Proyecto Backend"
+versión utilizada de .net 8.0
+al momento de crear el JWT token existe un apartado en la parte superior derecha de autorización para realizar la prueba a los endpoints con swagger
+"Proyecto frontend"
 versión de npm utilizada "10.9.2"
 versión de node utilizada "22.14.0"
 al entrar al directorio del proyecto, modificar las variables de entorno en caso de no contar con estas mismas o de querer utilizar las propias
+ejecutar el comando "npm install" para descargar las dependencias del proyecto

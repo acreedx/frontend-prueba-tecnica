@@ -6,10 +6,11 @@ import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { QrSearch, TQrSearch } from "../models/qrData";
-import { getQrInfo, qrInfo } from "../data/getQrInfo";
+import { getQrInfo } from "../data/getQrInfo";
 import { getFrontendToken } from "../data/getAuthToken";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { qrInfo } from "../models/qrInfo";
 
 export default function Page() {
   const [qrData, setQrData] = useState<qrInfo | undefined>();
