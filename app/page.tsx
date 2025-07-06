@@ -1,103 +1,236 @@
+"use client";
 import Image from "next/image";
+import Header from "./components/header";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { useState } from "react";
+import { Eye, EyeOff } from "lucide-react";
+import Link from "next/link";
+import { MockUsers } from "./data/mockUsers";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { TUserSchema, UserSchema } from "./models/user";
+import { toast } from "sonner";
+import { redirect } from "next/navigation";
 
 export default function Home() {
+  const [showUser, setShowUser] = useState(false);
+  const [showPassword, setshowPassword] = useState(false);
+  const fecha = new Date().toLocaleDateString();
+  const hora = new Date().toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm({
+    resolver: zodResolver(UserSchema),
+    mode: "onChange",
+  });
+  const onSubmit = async (data: TUserSchema) => {
+    if (
+      MockUsers.some(
+        (user) =>
+          user.usuario === data.username && user.password === data.password
+      )
+    ) {
+      toast("Bienvenido de nuevo", {
+        style: {
+          color: "white",
+          background: "green",
+        },
+      });
+      reset();
+      redirect("/consolidado");
+    } else {
+      toast("Usuario o contraseña incorrectos", {
+        style: {
+          background: "red",
+          color: "white",
+        },
+      });
+    }
+  };
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <>
+      <Header />
+      <main className="relative min-h-screen flex items-center justify-center bg-white px-4 sm:px-6 lg:px-8">
+        <div className="absolute inset-0 z-0 pointer-events-none">
+          <div
+            className="absolute top-0 left-[-200px] w-[1000px] h-[450px] rounded-full blur-[150px] opacity-70 mix-blend-multiply rotate-90"
+            style={{
+              background: "linear-gradient(0deg, #B0E0D772 44.67%, #A776BF 0%)",
+            }}
+          />
+          <div
+            className="absolute top-[100px] left-[300px] w-[400px] h-[700px] rounded-full blur-[150px] mix-blend-multiply"
+            style={{
+              background: "linear-gradient(0deg, #DEFFFD 68.12%, #BFE8D0 0%)",
+            }}
+          />
+          <div
+            className="absolute bottom-0 right-0 w-[1000px] h-[800px] rounded-full mix-blend-multiply blur-[120px]"
+            style={{
+              background: "linear-gradient(0deg, #80D2CD7A 47.82%, #80A6D2 0%)",
+              backgroundImage: "url('/sombras/abajo-derecha.png')",
+              backgroundRepeat: "no-repeat",
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+            }}
+          />
+        </div>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+        <div className="relative z-10 bg-white rounded-2xl shadow-lg p-10 sm:p-16 pb-12 w-full max-w-md">
+          <h1 className="text-3xl font-bold mb-8 text-start">Bienvenido,</h1>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <div className="flex flex-col gap-7">
+              <p className="text-[#03014C] opacity-50">
+                Ingresa al Banco de Alasitas
+              </p>
+
+              {/* Usuario */}
+              <div className="flex flex-col gap-2">
+                <label className="text-[14px] text-[#03014C] opacity-50">
+                  Usuario
+                </label>
+                <div className="relative w-full">
+                  <Input
+                    {...register("username", {
+                      required: "El nombre de usuario es requerido",
+                      maxLength: 20,
+                    })}
+                    maxLength={20}
+                    required
+                    type={showUser ? "text" : "password"}
+                    placeholder="********"
+                    className="focus:border-none focus-visible:ring-0 pl-0 placeholder:text-[#03014C] placeholder:opacity-50 rounded-none border-0 border-b border-main-light-gray focus:outline-none focus:ring-0 focus:border-main-light-gray"
+                  />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    className="absolute right-1 top-1/2 -translate-y-1/2"
+                    onClick={() => setShowUser((prev) => !prev)}
+                    tabIndex={-1}
+                  >
+                    {showUser ? (
+                      <EyeOff className="h-4 w-4 text-[#03014C] opacity-50" />
+                    ) : (
+                      <Eye className="h-4 w-4 text-[#03014C] opacity-50" />
+                    )}
+                  </Button>
+                </div>
+                {errors.username && (
+                  <p className="text-red-500 text-[14px]">
+                    {errors.username.message}
+                  </p>
+                )}
+              </div>
+
+              {/* Contraseña */}
+              <div className="flex flex-col gap-2">
+                <label className="text-[14px] text-[#03014C] opacity-50">
+                  Contraseña
+                </label>
+                <div className="relative w-full">
+                  <Input
+                    {...register("password", {
+                      required: "El password es requerido",
+                      maxLength: 20,
+                    })}
+                    maxLength={20}
+                    required
+                    type={showPassword ? "text" : "password"}
+                    placeholder="******************"
+                    className="focus:border-none focus-visible:ring-0 pl-0 placeholder:text-[#03014C] placeholder:opacity-50 rounded-none border-0 border-b border-main-light-gray focus:outline-none focus:ring-0 focus:border-main-light-gray"
+                  />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    className="absolute right-1 top-1/2 -translate-y-1/2"
+                    onClick={() => setshowPassword((prev) => !prev)}
+                    tabIndex={-1}
+                  >
+                    {showPassword ? (
+                      <EyeOff className="h-4 w-4 text-[#03014C] opacity-50" />
+                    ) : (
+                      <Eye className="h-4 w-4 text-[#03014C] opacity-50" />
+                    )}
+                  </Button>
+                </div>
+                {errors.password && (
+                  <p className="text-red-500 text-[14px]">
+                    {errors.password.message}
+                  </p>
+                )}
+              </div>
+
+              <Button
+                type="submit"
+                disabled={isSubmitting}
+                className="bg-main-dark-green w-full py-7 hover:bg-main-light-green"
+              >
+                Ingresar
+              </Button>
+
+              <div className="flex flex-col gap-4">
+                <p className="text-[14px] whitespace-normal sm:whitespace-nowrap">
+                  Olvidaste tu contraseña o tu usuario?{" "}
+                  <span className="text-main-dark-green font-semibold">
+                    Contáctanos
+                  </span>
+                </p>
+                <Button
+                  asChild
+                  className="bg-main-dark-blue w-full py-7 hover:bg-main-light-blue"
+                >
+                  <Link
+                    href={`https://wa.me/73744202?text=${encodeURIComponent(
+                      `Felicidades Jaime Adrian Herrera Linares, hoy ${fecha} ${hora} aprobaste el examen práctico de FrontEnd`
+                    )}`}
+                  >
+                    Contáctanos
+                  </Link>
+                </Button>
+              </div>
+
+              <div className="flex flex-row gap-8 w-full justify-center mt-4">
+                <Link href={"https://www.facebook.com"}>
+                  <Image
+                    src={"/logos-redes/facebook.png"}
+                    alt="logo facebook"
+                    width={32}
+                    height={32}
+                    className="h-auto w-[32px]"
+                  />
+                </Link>
+                <Link href={"https://www.instagram.com"}>
+                  <Image
+                    src={"/logos-redes/instagram.png"}
+                    alt="logo instagram"
+                    width={32}
+                    height={32}
+                    className="h-auto w-[32px]"
+                  />
+                </Link>
+                <Link href={"https://www.linkedin.com"}>
+                  <Image
+                    src={"/logos-redes/linkedin.png"}
+                    alt="logo linkedin"
+                    width={32}
+                    height={32}
+                    className="h-auto w-[32px]"
+                  />
+                </Link>
+              </div>
+            </div>
+          </form>
         </div>
       </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+    </>
   );
 }

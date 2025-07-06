@@ -1,0 +1,3 @@
+versión de npm utilizada "10.9.2"
+versión de node utilizada "22.14.0"
+al entrar al directorio del proyecto, modificar las variables de entorno en caso de no contar con estas mismas o de querer utilizar las propias
