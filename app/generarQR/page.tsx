@@ -9,9 +9,10 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
-import { generatePaymentQR, QRResponse } from "../data/generateQrPayment";
+import { generatePaymentQR } from "../data/generateQrPayment";
 import { getFrontendToken } from "../data/getAuthToken";
 import Link from "next/link";
+import { QRResponse } from "../models/qrResponse";
 
 export default function Page() {
   const [qrData, setQrData] = useState<QRResponse | undefined>();
